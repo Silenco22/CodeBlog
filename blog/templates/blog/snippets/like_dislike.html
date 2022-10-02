@@ -1,0 +1,16 @@
+
+    <form method="POST" action="{% url 'blog:like' post.slug post.pk %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+            <i class="fa fa-thumbs-up" style="color: blue"> <span>{{ post.likes.all.count }}</span></i>
+        </button>
+    </form>
+
+    <form method="POST" action="{% url 'blog:dislike' post.slug post.pk %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+            <i class="fa fa-thumbs-down" style="color: red"> <span>{{ post.dislikes.all.count }}</span></i>
+        </button>
+    </form>

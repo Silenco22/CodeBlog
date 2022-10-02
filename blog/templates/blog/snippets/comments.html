@@ -1,0 +1,21 @@
+
+{% for comment in comments %}
+		
+			
+				<p>
+					<strong>{{comment.author.username}}</strong><small class="text-muted mb-1"> {{ comment.created_on }}</small>
+					{% if request.user == comment.author %}
+					<a href="{% url 'blog:comment-edit' blog_post.slug comment.pk %}?next={{ request.path|urlencode }}" style="color: #333;"><i class="fa fa-edit"></i></a>
+					<a href="{% url 'blog:comment-delete' blog_post.slug comment.pk %}?next={{ request.path|urlencode }}" style="color: #333;"><i class="fa fa-trash"></i></a>
+					{% endif %}
+				</p>
+				
+				<p >{{comment.comment}}</p>
+				{% if comment.updated_at %}
+				<p><small class="text-muted mb-1"> Edited {{ comment.updated_at }}</small></p>
+				{% endif %}
+				<hr>
+			
+			
+{% endfor %}
+

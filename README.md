@@ -1,0 +1,1 @@
+ load env variable on start of new terminal: export $(grep -v '^#' .vscode/.env | xargs)

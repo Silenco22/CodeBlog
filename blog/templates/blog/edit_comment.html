@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style type="text/css">
+	.card{
+		max-width: 700px;
+	}
+	.card-body{
+		padding: 20px;
+	}
+</style>
+
+<div class="container">
+	<div class="row">
+        <div class="card m-auto mt-3">
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-3 col-sm-6">
+                <a href="{% url 'blog:detail' slug %}" class="btn btn-light">Back to Post</a>
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+                
+                    
+                        <form method="POST"  style="margin-top: 5px; margin-bottom: 5px;">
+                            <div style="margin-left: 35px;">
+                                {% csrf_token %}
+                                {{ comment_form | crispy }}
+                            </div>
+                            
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success mt-3">Update!</button>
+                            </div>
+                        </form>
+                    
+                
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock content %}

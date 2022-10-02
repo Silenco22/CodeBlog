@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style type="text/css">
+	.card{
+		max-width: 700px;
+	}
+	.card-body{
+		padding: 20px;
+	}
+</style>
+
+<div class="container">
+	<div class="row">
+
+		<!-- Blog Post -->
+		<div class="card m-auto">
+			<img class="card-img-top mt-1" src="{{blog_post.image.url}}">
+			<div class="card-body mt-2 mb-2">
+			  <h2 class="card-title">{{blog_post.title}}</h2>
+			  <p class="card-text">{{blog_post.body|safe}}</p>
+                {% if blog_post.author == request.user %}
+			  	<a href="{% url 'blog:edit' blog_post.slug %}" class="btn btn-primary">Edit</a>
+	            {% endif %}
+			</div>
+			<form method="POST" action="{% url 'blog:like' blog_post.slug blog_post.pk %}">
+				{% csrf_token %}
+				<input type="hidden" name="next" value="{{ request.path }}">
+				<button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+					<i class="fa fa-thumbs-up" style="color: blue"> <span>{{ blog_post.likes.all.count }}</span></i>
+				</button>
+			</form>
+		
+			<form method="POST" action="{% url 'blog:dislike' blog_post.slug blog_post.pk %}">
+				{% csrf_token %}
+				<input type="hidden" name="next" value="{{ request.path }}">
+				<button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+					<i class="fa fa-thumbs-down" style="color: red"> <span>{{ blog_post.dislikes.all.count }}</span></i>
+				</button>
+			</form>
+		
+			<div class="card-footer text-muted mb-1">
+			  Updated on {{blog_post.date_updated}} by {{blog_post.author}}
+			</div>
+		</div>
+		{% if comments %}
+		<div class="card m-auto mt-3" >
+			<h3>Comment section:</h3>
+		
+		<div>{% include 'blog/snippets/comments.html' %}</div>
+		<div>{% include 'blog/snippets/comment_pagination.html' %}</div>
+		
+		</div>
+		{% else %}
+		<div class="card m-auto mt-3">
+			<h3>Comment section:</h3>
+			<p>Currently there are no comments on this Post...</p>
+		</div>
+
+		{% endif %}
+		{% if user.is_authenticated %}
+		<div class="card m-auto mt-3">
+			
+				<form method="POST" style="margin-top: 5px; margin-bottom: 5px;">
+					
+					{% csrf_token %}
+					{{ comment_form | crispy }}
+					<div class="d-grid gap-2">
+						<button class="btn btn-success mt-3">Submit!</button>
+					</div>
+				</form>
+			
+		</div>
+		{% endif %}
+	</div>
+</div>
+
+
+{% endblock content %}
+
+
